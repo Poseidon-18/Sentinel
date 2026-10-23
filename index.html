@@ -262,6 +262,8 @@ function drawSignalChart(){
  line.setAttribute('points',pts.map(p=>p[0]+','+p[1]).join(' '));area.setAttribute('d',`M ${pts[0][0]} ${yBottom} `+pts.map(p=>`L ${p[0]} ${p[1]}`).join(' ')+` L ${pts[pts.length-1][0]} ${yBottom} Z`);dots.innerHTML='';pts.forEach((p,i)=>{const c=document.createElementNS('http://www.w3.org/2000/svg','circle');c.setAttribute('cx',p[0]);c.setAttribute('cy',p[1]);c.setAttribute('r',i===pts.length-1?'5':'3');c.setAttribute('fill',p[2]<35?'#ff5268':'#36c9ee');dots.appendChild(c)});document.getElementById('historyCurrent').textContent=vals[vals.length-1]+'%';
 }
 function refreshTelemetry(){
+  if (window.SENTINEL_LIVE_MODE) return;
+
  const jam=threat==='weak', spoof=threat==='mismatch', loss=threat==='loss';let signal,sats,speed,hdop,accel,gyro;
  if(jam){signal=Math.round(5+Math.random()*22);sats=Math.floor(Math.random()*3);speed=randomBetween(0,7);hdop='0';accel=randomBetween(.15,1.35,2);gyro=randomBetween(.02,.42,2)}
  else if(spoof){signal=Math.round(48+Math.random()*35);sats=5+Math.floor(Math.random()*5);speed=randomBetween(35,58);hdop=randomBetween(1.2,3.8,1);accel=randomBetween(1.6,3.2,2);gyro=randomBetween(.45,1.35,2)}

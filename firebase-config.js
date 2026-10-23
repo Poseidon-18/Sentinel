@@ -12,4 +12,4 @@ export const firebaseConfig = {
 };
 
 // The ESP32/backend should write current telemetry at this path.
-export const sentinelDataPath = "sentinel/current";
+export const sentinelDataPath = "devices/sentinel01/live";
