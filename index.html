@@ -174,8 +174,8 @@ th{background:#edf6ff;color:#527797}th,td{border-bottom-color:#dcebf8}
 <g id="satelliteTwo" transform="translate(610 35)"><rect class="satellite" x="-12" y="-7" width="24" height="14" rx="2"/><path d="M-22 -9L-12 -4V4L-22 9ZM12 -4L22 -9V9L12 4Z" fill="#8297b3"/></g>
 <path id="sig1" class="signal-line" d="M290 35L450 195"/><path id="sig2" class="signal-line" d="M610 35L450 195"/>
 <!-- Vehicle starts at gate and follows campus roads -->
-<g id="movingCar" class="car" transform="translate(450 430)"><rect x="-18" y="-10" width="36" height="20" rx="4"/><rect x="-8" y="-7" width="16" height="14" rx="2" fill="#dce6f2"/><line x1="-13" y1="-12" x2="-13" y2="12"/><line x1="13" y1="-12" x2="13" y2="12"/></g>
-<text id="carTag" x="450" y="406" text-anchor="middle" fill="#8af2a5" font-size="13" font-weight="bold">AP16 BX4712</text>
+<g id="movingCar" class="car" transform="translate(655 385)"><rect x="-18" y="-10" width="36" height="20" rx="4"/><rect x="-8" y="-7" width="16" height="14" rx="2" fill="#dce6f2"/><line x1="-13" y1="-12" x2="-13" y2="12"/><line x1="13" y1="-12" x2="13" y2="12"/></g>
+<text id="carTag" x="655" y="361" text-anchor="middle" fill="#8af2a5" font-size="13" font-weight="bold">AP16 BX4712</text>
 <!-- These overlays activate during simulated jamming -->
 <circle id="threatPulse" cx="450" cy="195" r="34" fill="#bd5555" opacity="0"/>
 <circle id="jamZoneRing" cx="450" cy="195" r="118"/>
@@ -284,12 +284,132 @@ document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',(
 document.getElementById('clearLog').addEventListener('click',()=>{document.getElementById('eventRows').innerHTML='';logWork('Event log cleared','good')});
 let carPaused=false,progress=0,carTimer=null,lastZone='';const car=document.getElementById('movingCar'),tag=document.getElementById('carTag');const routePoints=[[450,430],[450,382],[390,365],[315,350],[245,350],[245,315],[270,285],[306,252],[306,224],[306,195],[340,195],[375,195],[450,195],[525,195],[560,195],[594,195],[594,224],[594,252],[570,292],[655,340],[570,292],[475,348],[450,382],[450,430]];
 function point(t){let segs=routePoints.slice(0,-1).map((a,i)=>({a,b:routePoints[i+1]})),lengths=segs.map(s=>Math.hypot(s.b[0]-s.a[0],s.b[1]-s.a[1])),total=lengths.reduce((a,b)=>a+b,0),d=(t%1)*total;for(let i=0;i<segs.length;i++){if(d<=lengths[i]){let s=segs[i],f=d/lengths[i];return [s.a[0]+(s.b[0]-s.a[0])*f,s.a[1]+(s.b[1]-s.a[1])*f]}d-=lengths[i]}return routePoints[0]}
-function move(){if(!carPaused&&!document.getElementById('vehicleWorkspace').classList.contains('hidden')){progress=(progress+.00105)%1;let [x,y]=point(progress);car.setAttribute('transform',`translate(${x} ${y})`);tag.setAttribute('x',x);tag.setAttribute('y',y-24);document.getElementById('coords').textContent=`GNSS ${(16.49765+progress*.0008).toFixed(5)}, ${(80.50024+progress*.0007).toFixed(5)}`;
- let zone=(x>380&&x<520&&y>175&&y<230)?'CB':(x>190&&x<300&&y>310&&y<380)?'AB1':(x>600&&x<710&&y>310&&y<380)?'AB2':'';const map=document.querySelector('.map-wrap'),zoneAlert=zone==='CB'||zone==='AB1';map.classList.toggle('caution-cb',zone==='CB');map.classList.toggle('caution-ab1',zone==='AB1');
- if(zoneAlert){threat='weak';map.classList.add('jamming');document.getElementById('jammingLamp').classList.add('active');document.getElementById('jamBanner').textContent='⚠ ALERT // JAMMING + SPOOFING // '+(zone==='CB'?'CENTRAL BLOCK (CB)':'AB1');if(threat==='normal')threat='weak';document.getElementById('navStatus').textContent='Warning · '+(zone==='CB'?'Central Block (CB)':'AB1');document.getElementById('navStatus').className='pill warn';document.getElementById('threatText').textContent='LOCATION ALERT: Simulated jamming and spoofing warning active at '+(zone==='CB'?'Central Block (CB)':'AB1')+'. Red lights switch off when the vehicle leaves the zone.';}
- else{threat=manualThreat;map.classList.toggle('jamming',manualThreat==='weak');document.getElementById('jammingLamp').classList.toggle('active',manualThreat==='weak');if(manualThreat!=='weak'){document.getElementById('navStatus').textContent=manualThreat==='mismatch'?'Alert · Possible spoofing':manualThreat==='loss'?'Unavailable · Signal lost':'Available · Demo mode';document.getElementById('navStatus').className='pill'+(manualThreat==='normal'?'':' warn');}}
- if(zone&&zone!==lastZone){const notice=document.getElementById('cautionNotice');notice.textContent='⚠ LOCATION ALERT: '+(zone==='CB'?'CENTRAL BLOCK (CB)':zone==='AB1'?'AB1':'AB2')+(zoneAlert?' · JAMMING + SPOOFING':' · CAUTION');notice.classList.remove('hidden');logWork(zoneAlert?'Jamming + spoofing alert at '+(zone==='CB'?'Central Block (CB)':'AB1'):'Vehicle reached AB2','warn');setTimeout(()=>notice.classList.add('hidden'),4500)}if(zone)lastZone=zone;else lastZone='';document.getElementById('sig1').setAttribute('opacity',threat==='loss'||zoneAlert?'.18':'.8');document.getElementById('sig2').setAttribute('opacity',threat==='loss'||zoneAlert?'.2':'.8');
- }carTimer=requestAnimationFrame(move)}move();document.getElementById('pauseCar').onclick=()=>{carPaused=!carPaused;document.getElementById('pauseCar').textContent=carPaused?'Resume vehicle':'Pause vehicle';logWork(carPaused?'Vehicle animation paused':'Vehicle animation resumed')};setInterval(()=>{if(!document.getElementById('vehicleWorkspace').classList.contains('hidden')){refreshTelemetry();}},1400);drawSignalChart();
+function move() {
+    // LIVE MODE: keep the schematic vehicle marker parked at AB2.
+    // Do not overwrite coordinates or status supplied by Firebase.
+    if (window.SENTINEL_LIVE_MODE) {
+        car.setAttribute("transform", "translate(655 385)");
+        tag.setAttribute("x", 655);
+        tag.setAttribute("y", 361);
+        return; // Stop the simulated animation loop in live mode.
+    }
+
+    // DEMO MODE: follow the simulated campus route.
+    if (
+        !carPaused &&
+        !document.getElementById("vehicleWorkspace").classList.contains("hidden")
+    ) {
+        progress = (progress + 0.00105) % 1;
+        const [x, y] = point(progress);
+
+        car.setAttribute("transform", `translate(${x} ${y})`);
+        tag.setAttribute("x", x);
+        tag.setAttribute("y", y - 24);
+
+        document.getElementById("coords").textContent =
+            `GNSS ${(16.49765 + progress * 0.0008).toFixed(5)}, ${(80.50024 + progress * 0.0007).toFixed(5)}`;
+
+        const zone =
+            (x > 380 && x < 520 && y > 175 && y < 230) ? "CB" :
+            (x > 190 && x < 300 && y > 310 && y < 380) ? "AB1" :
+            (x > 600 && x < 710 && y > 310 && y < 380) ? "AB2" : "";
+
+        const map = document.querySelector(".map-wrap");
+        const zoneAlert = zone === "CB" || zone === "AB1";
+
+        map.classList.toggle("caution-cb", zone === "CB");
+        map.classList.toggle("caution-ab1", zone === "AB1");
+
+        if (zoneAlert) {
+            threat = "weak";
+            map.classList.add("jamming");
+            document.getElementById("jammingLamp").classList.add("active");
+
+            document.getElementById("jamBanner").textContent =
+                "⚠ ALERT // JAMMING + SPOOFING // " +
+                (zone === "CB" ? "CENTRAL BLOCK (CB)" : "AB1");
+
+            document.getElementById("navStatus").textContent =
+                "Warning · " + (zone === "CB" ? "Central Block (CB)" : "AB1");
+            document.getElementById("navStatus").className = "pill warn";
+
+            document.getElementById("threatText").textContent =
+                "LOCATION ALERT: Simulated jamming and spoofing warning active at " +
+                (zone === "CB" ? "Central Block (CB)" : "AB1") +
+                ". Red lights switch off when the vehicle leaves the zone.";
+        } else {
+            threat = manualThreat;
+            map.classList.toggle("jamming", manualThreat === "weak");
+            document.getElementById("jammingLamp").classList.toggle(
+                "active",
+                manualThreat === "weak"
+            );
+
+            if (manualThreat !== "weak") {
+                document.getElementById("navStatus").textContent =
+                    manualThreat === "mismatch" ? "Alert · Possible spoofing" :
+                    manualThreat === "loss" ? "Unavailable · Signal lost" :
+                    "Available · Demo mode";
+
+                document.getElementById("navStatus").className =
+                    "pill" + (manualThreat === "normal" ? "" : " warn");
+            }
+        }
+
+        if (zone && zone !== lastZone) {
+            const notice = document.getElementById("cautionNotice");
+            notice.textContent =
+                "⚠ LOCATION ALERT: " +
+                (zone === "CB" ? "CENTRAL BLOCK (CB)" : zone === "AB1" ? "AB1" : "AB2") +
+                (zoneAlert ? " · JAMMING + SPOOFING" : " · CAUTION");
+            notice.classList.remove("hidden");
+
+            logWork(
+                zoneAlert
+                    ? "Jamming + spoofing alert at " +
+                        (zone === "CB" ? "Central Block (CB)" : "AB1")
+                    : "Vehicle reached AB2",
+                "warn"
+            );
+
+            setTimeout(() => notice.classList.add("hidden"), 4500);
+        }
+
+        lastZone = zone || "";
+
+        document.getElementById("sig1").setAttribute(
+            "opacity",
+            threat === "loss" || zoneAlert ? ".18" : ".8"
+        );
+        document.getElementById("sig2").setAttribute(
+            "opacity",
+            threat === "loss" || zoneAlert ? ".2" : ".8"
+        );
+    }
+
+    carTimer = requestAnimationFrame(move);
+}
+
+move();
+
+document.getElementById("pauseCar").onclick = () => {
+    carPaused = !carPaused;
+    document.getElementById("pauseCar").textContent =
+        carPaused ? "Resume vehicle" : "Pause vehicle";
+    logWork(carPaused ? "Vehicle animation paused" : "Vehicle animation resumed");
+};
+
+// Never let demo telemetry overwrite live Firebase readings.
+setInterval(() => {
+    if (
+        !window.SENTINEL_LIVE_MODE &&
+        !document.getElementById("vehicleWorkspace").classList.contains("hidden")
+    ) {
+        refreshTelemetry();
+    }
+}, 1400);
+
+drawSignalChart();
 </script>
  <script type="module" src="./firebase-live.js"></script>
 </body></html>
