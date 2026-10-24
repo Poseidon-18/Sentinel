@@ -1,32 +1,109 @@
-# SENTINEL | GNSS Integrity Monitor System
+SENTINEL
 
-**SENTINEL** is an embedded systems project designed to monitor Global Navigation Satellite System (GNSS) signal integrity and identify potentially suspicious navigation conditions, including signal jamming, spoofing, and signal loss.
+Satellite Electronic Navigation Threat Intelligence and Navigation Emergency Link
 
-The system uses an ESP32 microcontroller, a GNSS receiver, and an MPU6050 inertial measurement unit (IMU) to monitor navigation data and compare satellite-based movement with sensor-based motion information. The project also aims to provide alerts, record events, and support short-term motion monitoring when GNSS signals become unreliable.
+SENTINEL is an end-to-end GNSS integrity monitoring and alert system designed for defense vehicles, convoy logistics, and rescue operations. Standard GPS receivers cannot differentiate between genuine satellite signals and spoofed or jammed signals. SENTINEL solves this by cross-checking satellite navigation data against inertial motion sensors at the edge, classifying threat levels in real time, and alerting both the vehicle operator and the base command center.
 
-##  Key Features
+Key Features
 
-* **GNSS Signal Monitoring:** Monitors satellite signal availability and quality.
-* **Jamming Detection:** Identifies conditions that may indicate GNSS interference.
-* **Spoofing Detection:** Checks for inconsistencies between GNSS navigation data and IMU measurements.
-* **Signal Loss Detection:** Identifies when GNSS navigation data becomes unavailable.
-* **IMU-Based Monitoring:** Uses acceleration and gyroscope measurements to observe movement.
-* **Alert System:** Integrates LED, buzzer, and LCD outputs for local notifications.
-* **Event Logging:** Designed to record navigation events and system alerts.
-* **Web Dashboard:** Provides a visual interface for monitoring system status, telemetry, and simulated threat scenarios.
-* **Firebase Integration:** Intended to support backend data storage and communication.
-* **Cellular Connectivity:** An EC200U LTE module is planned for remote event transmission.
-* 
-  ## Technologies Used
-* **Embedded Hardware:** ESP32, GNSS receiver, MPU6050 IMU
-* **Programming:** Arduino/C++ for embedded firmware, HTML, CSS, and JavaScript for the frontend
-* **Backend:** Firebase
-* **Communication:** UART, I2C, and planned LTE connectivity
-* **Development Tools:** Arduino IDE, Visual Studio Code, Git, and GitHub
-* **Deployment:** Vercel for the web frontend
+Cross-Sensor Signal Verification: Fuses data from a NEO-6M GNSS receiver and an MPU6050 IMU on an ESP32 microcontroller to verify if reported satellite motion aligns with actual physical acceleration.
 
- ##Project Objective
-The primary objective of SENTINEL is to develop a low-cost GNSS integrity monitoring prototype that can identify potentially unreliable navigation conditions by combining satellite navigation information with inertial sensor data.
-The project explores how embedded systems, sensor fusion, and web-based monitoring can contribute to more reliable navigation systems.
-tem performance under controlled test conditions.
+4-State Threat Classification: Real-time state detection for:
 
+NORMAL: GNSS and IMU motion data agree.
+
+DEGRADED: High HDOP / fix drift detected while stationary.
+
+SUSPECTED SPOOFING: GNSS reports high speed while IMU senses zero physical acceleration.
+
+GNSS BLACKOUT: Complete loss of satellite signal; captures last known fix.
+
+Multi-Layer Emergency Alerts:
+
+On-Device: Local LCD display, LED status indicators, and audio buzzer alerts.
+
+Out-of-Band SMS: Transmits immediate threat state and coordinates via EC200U LTE module even during web outages.
+
+Cloud Sync: Telemetry and event logs synced to Firebase in real time.
+
+Base Command Web Console: Web application with secure login to monitor fleet status, track vehicle location on a live map, and inspect detailed diagnostic telemetry (HDOP, satellite count, IMU delta, speed).
+
+Hardware Architecture & Pinout
+
+Module
+
+Interface
+
+ESP32 Pins
+
+Function
+
+NEO-6M GNSS
+
+UART2
+
+GPIO16 (RX), GPIO17 (TX)
+
+Satellite position, speed, HDOP, satellite count
+
+MPU6050 IMU
+
+I²C (0x68)
+
+GPIO21 (SDA), GPIO22 (SCL)
+
+6-axis acceleration & angular velocity
+
+16x2 LCD
+
+I²C (Shared)
+
+GPIO21 (SDA), GPIO22 (SCL)
+
+On-vehicle status updates
+
+EC200U LTE
+
+UART1
+
+GPIO26 (RX), GPIO27 (TX)
+
+Emergency SMS & cellular data transport
+
+Buzzer / LEDs
+
+GPIO
+
+GPIO2, GPIO4
+
+Local visual and sound alarms
+
+Tech Stack
+
+Embedded Firmware: C++ / Arduino Framework on ESP32
+
+Database & Cloud: Firebase Realtime Database / Firestore & Firebase Authentication
+
+Frontend Web Console: React / Modern JS Web App with interactive mapping components
+
+How Threat Detection Works
+
+                     +-----------------------+
+                     |  NEO-6M GNSS Module   |
+                     | (Speed, HDOP, Sats)   |
+                     +-----------+-----------+
+                                 |
+                                 v
++------------------+     +-------+-------+     +------------------------+
+|  MPU6050 IMU     | --> | ESP32 Fusion  | --> | Classification Engine  |
+| (Accel & Motion) |     |    Engine     |     |  (Normal, Degraded,    |
++------------------+     +---------------+     |   Spoofed, Blackout)   |
+                                               +-----------+------------+
+                                                           |
+                                 +-------------------------+-------------------------+
+                                 |                         |                         |
+                                 v                         v                         v
+                       +-------------------+     +-------------------+     +-------------------+
+                       | Local Alerts      |     | LTE Module (SMS)  |     | Firebase Console  |
+                       | (LCD, LED, Sound) |     | (Direct to Base)  |     | (Web Map & Logs)  |
+                       +-------------------+     +-------------------+     +-------------------+
