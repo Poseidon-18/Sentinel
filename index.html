@@ -121,9 +121,73 @@ th{background:#edf6ff;color:#527797}th,td{border-bottom-color:#dcebf8}
 .login-card input,.vehicle-row input{border-color:#bdd9ef;background:#fbfdff;color:#18324d}
 .pill{background:#e6f7ee;color:#237a55}.pill.warn{background:#fff2d8;color:#9b6718}
 @media(prefers-reduced-motion:reduce){.route,.signal-line{animation:none}}
-</style></head><body>
-<section class="login-screen" id="loginScreen"><form class="login-card" id="loginForm"><div class="login-brand">SENTINEL</div><div class="eyebrow" style="margin-top:10px">GNSS INTEGRITY MONITOR</div><h1>Operator login</h1><p>Sign in to access the SENTINEL monitoring system.</p><label for="operatorId">Operator ID</label><input id="operatorId" name="operatorId" autocomplete="username" required placeholder="Enter operator ID"><label for="operatorPassword">Password</label><input id="operatorPassword" name="password" type="password" autocomplete="current-password" required placeholder="Enter password"><button class="btn primary" type="submit">Login securely</button><div class="login-error" id="loginError" role="alert"></div><div class="login-foot">Demo login gate. For real security, use server-side authentication or Firebase Authentication; credentials embedded in a webpage can be inspected.</div></form></section><div id="appShell" class="hidden"><header class="top"><div class="brand">SENTINEL</div><nav><button class="active" data-view="overview">OVERVIEW</button><button data-view="monitoring">MONITORING</button><button class="logout" id="logoutBtn" type="button">LOG OUT</button></nav></header><main>
-<section id="overview" class="view active"><div class="hero-grid"><div class="hero-copy"><div class="eyebrow">ECS PROJECT · 2026–27</div><h1>Reliable navigation starts with knowing when to trust the signal.</h1><p>SENTINEL is a GNSS integrity monitoring prototype designed to identify suspicious navigation conditions such as signal jamming, spoofing, and loss of satellite signal. It compares satellite navigation information with motion data from an inertial sensor.</p><div class="btn-row"><button class="btn primary" data-go="monitoring">Open monitoring dashboard</button><button class="btn" data-go="monitoring">How it works</button></div></div><div class="diagram"><svg viewBox="0 0 520 300" role="img" aria-label="Conceptual SENTINEL system overview"><g fill="none" stroke="#a9bbd1" stroke-width="2"><path d="M260 74V115M164 145H190M330 145H354M115 171V228H175M260 171V199M405 171V228H345"/><path d="M145 54Q260 -12 375 54" stroke-dasharray="4 6"/></g><g fill="#8aa1bd"><rect x="198" y="22" width="22" height="24" rx="3"/><rect x="300" y="22" width="22" height="24" rx="3"/></g><rect x="225" y="16" width="70" height="36" rx="5" fill="#45649a"/><path d="M260 16V7M252 7H268" stroke="#45649a" stroke-width="2"/><rect x="70" y="118" width="94" height="46" rx="9" fill="#fff" stroke="#a9bbd1" stroke-width="2"/><rect x="190" y="120" width="140" height="44" rx="9" fill="#fff" stroke="#a9bbd1" stroke-width="2"/><rect x="354" y="118" width="94" height="46" rx="9" fill="#344f7d"/><rect x="175" y="199" width="170" height="54" rx="10" fill="#fff" stroke="#a9bbd1" stroke-width="2"/><g font-family="Arial" font-size="11" text-anchor="middle"><text x="117" y="137" fill="#536987">MPU6050</text><text x="117" y="151" fill="#71819a" font-size="9">Motion data</text><text x="260" y="138" fill="#536987">GNSS RECEIVER</text><text x="260" y="151" fill="#71819a" font-size="9">Satellite data</text><text x="401" y="137" fill="#fff">ESP32</text><text x="401" y="151" fill="#fff" font-size="9">Controller</text><text x="260" y="222" fill="#536987">Integrity checks</text><text x="260" y="237" fill="#71819a" font-size="10">Compare · Detect · Alert</text><text x="260" y="286" fill="#71819a" font-size="12">Conceptual system overview</text></g></svg><p>Concept diagram only — final data depends on the connected hardware and firmware.</p></div></div><div class="checks"><h2>What SENTINEL checks</h2><p class="sub">Three navigation conditions the prototype is designed to flag.</p><div class="cards"><article class="card"><div class="icon">⌁</div><h3>Signal jamming</h3><p>Looks for signs of unusually weak or unavailable satellite signals that may indicate interference.</p></article><article class="card"><div class="icon">◎</div><h3>Possible spoofing</h3><p>Checks for suspicious differences between GNSS movement and the motion measured by the IMU.</p></article><article class="card"><div class="icon">◷</div><h3>Signal loss</h3><p>Reports when satellite navigation data is unavailable, while inertial data can help track short-term motion.</p></article></div><div class="prototype-note"><b>Prototype note:</b> This website currently uses demonstration data. It is not connected to the ESP32 or live GNSS hardware, so the dashboard values and simulation alerts are not real measurements.</div></div></section>
+
+/* SENTINEL refinement: dark by default, restrained and responsive */
+:root{color-scheme:dark;--bg:#07111c;--panel:#0d1a29;--line:#23384d;--text:#e7eff8;--muted:#9aadc0;--blue:#42c4e8;--blue2:#10283a;--green:#42d6a0;--amber:#f5bf58;--red:#ff6275}
+html{scroll-behavior:smooth}
+body{background:#07111c;color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.6}
+.top{background:rgba(7,17,28,.94);border-bottom:1px solid #23384d;box-shadow:none;backdrop-filter:blur(12px)}
+.brand{color:#55cdec;letter-spacing:5px;font-size:24px}
+nav{gap:10px}nav button,.btn{background:transparent;color:#b9cad9;border-color:transparent;border-radius:7px;font-size:12px;letter-spacing:1.2px;padding:10px 14px}
+nav button.active{background:transparent;color:#55cdec;border-bottom:2px solid #55cdec;box-shadow:none}
+nav button:hover,.btn:hover{transform:none;background:#102438;box-shadow:none}
+.btn.primary{background:#167da2;border:1px solid #2da9ce;color:white;box-shadow:none}
+main{max-width:1440px;padding:44px 5.5% 64px}
+.hero-grid{grid-template-columns:1fr 1.05fr;gap:clamp(32px,5vw,76px);align-items:center}
+.eyebrow{color:#55cdec;font-size:12px;letter-spacing:2.2px}
+h1{font-size:clamp(36px,4.2vw,62px);line-height:1.08;letter-spacing:-1.8px;font-weight:650}
+p{color:#a9b9c9;line-height:1.75}
+.diagram{background:#091725;border:1px solid #24445a;border-radius:2px;box-shadow:none;padding:22px}
+.diagram p{font-size:12px}
+.checks{border-top:1px solid #23384d;margin-top:54px;padding-top:28px}
+.checks h2,.section-head h2{font-size:25px;font-weight:600}
+.cards{grid-template-columns:1fr;gap:0;margin-top:16px}
+.card{display:grid;grid-template-columns:44px minmax(170px,.5fr) 1.2fr;gap:16px;align-items:center;padding:18px 4px;border:0;border-bottom:1px solid #23384d;border-radius:0;background:transparent!important;box-shadow:none!important}
+.card:before{display:none}.card:hover{transform:none;border-color:#37637b}
+.card .icon{margin:0;width:36px;height:36px;background:#10283a;border:1px solid #28536a;border-radius:50%;color:#55cdec}
+.card h3{font-size:14px;letter-spacing:1px;margin:0}.card p{font-size:14px;margin:0}
+.prototype-note{background:#0d1c2a;border:1px solid #243c51;border-radius:4px;color:#a9bfd0}
+.login-screen{position:fixed;inset:0;z-index:50;min-height:100vh;background:rgba(3,9,16,.88);backdrop-filter:blur(9px);display:grid;place-items:center;padding:30px}
+.login-card{width:min(560px,100%);background:transparent;border:0;border-radius:0;padding:clamp(24px,5vw,58px);box-shadow:none;animation:loginEnter .35s ease-out}
+.login-card:before{content:"";display:block;width:52px;height:3px;background:#55cdec;margin-bottom:25px}
+.login-brand{font-size:30px;letter-spacing:6px;color:#55cdec}
+.login-card h1{font-size:clamp(34px,4vw,48px);margin:18px 0 8px}
+.login-card label{color:#c7d5e2;font-size:13px;letter-spacing:.5px}
+.login-card input{background:#0b1826;border:1px solid #2a455b;border-radius:4px;padding:14px 15px;color:#e7eff8}
+.login-card .btn{width:auto;min-width:180px;margin-top:24px;padding:13px 20px}
+.login-foot{font-size:12px;max-width:440px;line-height:1.7}
+@keyframes loginEnter{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.login-blurred{filter:blur(3px);pointer-events:none;user-select:none}
+.vehicle-entry-form label{text-align:left;color:var(--text);font-size:clamp(25px,3vw,34px)}
+.vehicle-entry-form input{background:#0b1826;color:#e7eff8;border-color:#2a455b;border-radius:4px}
+.vehicle-entry-form .btn{align-self:flex-start;min-width:160px}
+#vehicleWorkspace .map-card,#vehicleWorkspace .working-controls,#vehicleWorkspace .monitor-grid,#vehicleWorkspace .monitor-lower,#vehicleWorkspace .monitor-extra-grid,#vehicleWorkspace .event-section,#vehicleWorkspace .map-alerts{display:none!important}
+#vehicleWorkspace .monitoring-title{padding-bottom:18px;border-bottom:1px solid #23384d}
+#vehicleWorkspace .telemetry-table-card{background:#0d1a29;border-color:#23384d}
+#vehicleWorkspace .telemetry-table{min-width:0}
+#vehicleWorkspace .telemetry-table th{background:#112438;color:#9aadc0}
+#vehicleWorkspace .telemetry-table td,#vehicleWorkspace .telemetry-table th{border-color:#23384d}
+#vehicleWorkspace .telemetry-table td:nth-child(2){color:#55cdec}
+.hidden{display:none!important}
+@media(max-width:800px){.hero-grid{grid-template-columns:1fr}.diagram{margin-top:12px}.card{grid-template-columns:40px 1fr}.card p{grid-column:2}.checks{margin-top:36px}}
+@media(max-width:520px){.brand{font-size:20px}nav{gap:0}nav button{font-size:10px;padding:8px}main{padding-top:30px}.login-card{padding:20px}.login-card .btn{width:100%}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+
+#liveLocationPanel{display:block;margin:22px 0;background:#0d1a29;border:1px solid #23384d;border-radius:6px;overflow:hidden}
+#liveLocationPanel .map-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid #23384d}
+#liveLocationPanel h3{margin:0;font-size:15px;font-weight:600}
+#liveLocationPanel .map-state{font-size:12px;color:#9aadc0}
+#sentinelLiveMap{height:340px;width:100%;background:#0a1724}
+#liveLocationPanel .map-foot{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:12px 18px;color:#9aadc0;font-size:12px}
+#liveLocationPanel .map-coords{font-family:ui-monospace,SFMono-Regular,monospace;color:#55cdec}
+.leaflet-container{font:12px Inter,system-ui,sans-serif}
+@media(max-width:650px){#sentinelLiveMap{height:260px}#liveLocationPanel .map-head{align-items:flex-start;flex-direction:column}}
+
+</style><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+</head><body>
+<section class="login-screen hidden" id="loginScreen"><form class="login-card" id="loginForm"><div class="login-brand">SENTINEL</div><div class="eyebrow" style="margin-top:10px">GNSS INTEGRITY MONITOR</div><h1>Operator login</h1><p>Sign in to access the SENTINEL monitoring system.</p><label for="operatorId">Operator ID</label><input id="operatorId" name="operatorId" autocomplete="username" required placeholder="Enter operator ID"><label for="operatorPassword">Password</label><input id="operatorPassword" name="password" type="password" autocomplete="current-password" required placeholder="Enter password"><button class="btn primary" type="submit">Login securely</button><div class="login-error" id="loginError" role="alert"></div><div class="login-foot">Demo login gate. For real security, use server-side authentication or Firebase Authentication; credentials embedded in a webpage can be inspected.</div></form></section><div id="appShell"><header class="top"><div class="brand">SENTINEL</div><nav><button class="active" data-view="overview">ABOUT US</button><button data-view="monitoring">MONITORING</button><button class="logout hidden" id="logoutBtn" type="button">LOG OUT</button></nav></header><main>
+<section id="overview" class="view active"><div class="hero-grid"><div class="hero-copy"><div class="eyebrow">ECS PROJECT · 2026–27</div><h1>Reliable navigation starts with knowing when to trust the signal.</h1><p>SENTINEL is a GNSS integrity monitoring prototype designed to identify suspicious navigation conditions such as signal jamming, spoofing, and loss of satellite signal. It compares satellite navigation information with motion data from an inertial sensor.</p></div><div class="diagram"><svg viewBox="0 0 520 300" role="img" aria-label="Conceptual SENTINEL system overview"><g fill="none" stroke="#a9bbd1" stroke-width="2"><path d="M260 74V115M164 145H190M330 145H354M115 171V228H175M260 171V199M405 171V228H345"/><path d="M145 54Q260 -12 375 54" stroke-dasharray="4 6"/></g><g fill="#8aa1bd"><rect x="198" y="22" width="22" height="24" rx="3"/><rect x="300" y="22" width="22" height="24" rx="3"/></g><rect x="225" y="16" width="70" height="36" rx="5" fill="#45649a"/><path d="M260 16V7M252 7H268" stroke="#45649a" stroke-width="2"/><rect x="70" y="118" width="94" height="46" rx="9" fill="#fff" stroke="#a9bbd1" stroke-width="2"/><rect x="190" y="120" width="140" height="44" rx="9" fill="#fff" stroke="#a9bbd1" stroke-width="2"/><rect x="354" y="118" width="94" height="46" rx="9" fill="#344f7d"/><rect x="175" y="199" width="170" height="54" rx="10" fill="#fff" stroke="#a9bbd1" stroke-width="2"/><g font-family="Arial" font-size="11" text-anchor="middle"><text x="117" y="137" fill="#536987">MPU6050</text><text x="117" y="151" fill="#71819a" font-size="9">Motion data</text><text x="260" y="138" fill="#536987">GNSS RECEIVER</text><text x="260" y="151" fill="#71819a" font-size="9">Satellite data</text><text x="401" y="137" fill="#fff">ESP32</text><text x="401" y="151" fill="#fff" font-size="9">Controller</text><text x="260" y="222" fill="#536987">Integrity checks</text><text x="260" y="237" fill="#71819a" font-size="10">Compare · Detect · Alert</text><text x="260" y="286" fill="#71819a" font-size="12">Conceptual system overview</text></g></svg><p>Concept diagram only — final data depends on the connected hardware and firmware.</p></div></div><div class="checks"><h2>What SENTINEL checks</h2><p class="sub">Three navigation conditions the prototype is designed to flag.</p><div class="cards"><article class="card"><div class="icon">⌁</div><h3>Signal jamming</h3><p>Looks for signs of unusually weak or unavailable satellite signals that may indicate interference.</p></article><article class="card"><div class="icon">◎</div><h3>Possible spoofing</h3><p>Checks for suspicious differences between GNSS movement and the motion measured by the IMU.</p></article><article class="card"><div class="icon">◷</div><h3>Signal loss</h3><p>Reports when satellite navigation data is unavailable, while inertial data can help track short-term motion.</p></article></div><div class="prototype-note"><b>Prototype note:</b> Live telemetry is read from Firebase when the ESP32 publishes data. The system diagram and campus map are illustrative, not live maps.</div></div></section>
 <section id="monitoring" class="view">
 <div class="vehicle-gate vehicle-entry-screen" id="vehicleGate">
   <form id="vehicleForm" class="vehicle-entry-form">
@@ -134,8 +198,20 @@ th{background:#edf6ff;color:#527797}th,td{border-bottom-color:#dcebf8}
   </form>
 </div>
 <div id="vehicleWorkspace" class="hidden">
-  <div class="monitoring-title"><div><div class="eyebrow">SENTINEL · MONITORING</div><h2>Vehicle monitoring</h2></div><span class="pill" id="navStatus">Available · Demo mode</span></div>
-  <div class="prototype-note selected-vehicle-note"><b>Vehicle:</b> <span id="selectedVehicle">—</span> <span class="muted">· Simulated frontend demonstration</span></div>
+<div id="liveLocationPanel" aria-live="polite">
+  <div class="map-head">
+    <h3>Current GNSS position</h3>
+    <div id="liveMapState" class="map-state">Waiting for valid coordinates…</div>
+  </div>
+  <div id="sentinelLiveMap" role="img" aria-label="Map showing the latest valid GNSS coordinates"></div>
+  <div class="map-foot">
+    <span id="liveMapMessage">No location has been received yet.</span>
+    <span id="liveMapCoords" class="map-coords">LAT — · LON —</span>
+  </div>
+</div>
+
+  <div class="monitoring-title"><div><div class="eyebrow">SENTINEL · MONITORING</div><h2>Vehicle monitoring</h2></div><span class="pill warn" id="navStatus">Connecting to Firebase…</span></div>
+  <div class="prototype-note selected-vehicle-note"><b>Vehicle:</b> <span id="selectedVehicle">—</span> <span class="muted" id="feedNote">· Waiting for ESP32 data</span></div>
   <div class="map-alerts"><span id="cautionNotice" class="caution-notice hidden" role="status">⚠ CAUTION: Vehicle approaching monitored building</span><span id="jammingLamp" class="jamming-lamp"><i></i> JAMMING ALERT</span></div>
   <div class="map-card"><div class="map-head"><span>AREA OF OPERATION: VIT-AP CAMPUS · SCHEMATIC</span><span id="coords">GNSS 16.49765, 80.50024</span></div><div class="map-wrap"><div class="jam-banner" id="jamBanner">⚠ ALERT // GNSS JAMMING DETECTED // CENTRAL BLOCK</div><svg id="workMap" viewBox="0 0 900 460" role="img" aria-label="Campus layout based on the user's reference: Central Block is an inverted U in the centre; Men's Hostel is diagonally upper-left; Ladies Hostel is diagonally upper-right; AB1 and AB2 are in front of their respective hostels; entry gate is at the bottom.">
 <rect width="900" height="460" fill="#f3f9ff"/>
@@ -174,8 +250,8 @@ th{background:#edf6ff;color:#527797}th,td{border-bottom-color:#dcebf8}
 <g id="satelliteTwo" transform="translate(610 35)"><rect class="satellite" x="-12" y="-7" width="24" height="14" rx="2"/><path d="M-22 -9L-12 -4V4L-22 9ZM12 -4L22 -9V9L12 4Z" fill="#8297b3"/></g>
 <path id="sig1" class="signal-line" d="M290 35L450 195"/><path id="sig2" class="signal-line" d="M610 35L450 195"/>
 <!-- Vehicle starts at gate and follows campus roads -->
-<g id="movingCar" class="car" transform="translate(655 385)"><rect x="-18" y="-10" width="36" height="20" rx="4"/><rect x="-8" y="-7" width="16" height="14" rx="2" fill="#dce6f2"/><line x1="-13" y1="-12" x2="-13" y2="12"/><line x1="13" y1="-12" x2="13" y2="12"/></g>
-<text id="carTag" x="655" y="361" text-anchor="middle" fill="#8af2a5" font-size="13" font-weight="bold">AP16 BX4712</text>
+<g id="movingCar" class="car" transform="translate(450 430)"><rect x="-18" y="-10" width="36" height="20" rx="4"/><rect x="-8" y="-7" width="16" height="14" rx="2" fill="#dce6f2"/><line x1="-13" y1="-12" x2="-13" y2="12"/><line x1="13" y1="-12" x2="13" y2="12"/></g>
+<text id="carTag" x="450" y="406" text-anchor="middle" fill="#8af2a5" font-size="13" font-weight="bold">AP16 BX4712</text>
 <!-- These overlays activate during simulated jamming -->
 <circle id="threatPulse" cx="450" cy="195" r="34" fill="#bd5555" opacity="0"/>
 <circle id="jamZoneRing" cx="450" cy="195" r="118"/>
@@ -196,7 +272,7 @@ th{background:#edf6ff;color:#527797}th,td{border-bottom-color:#dcebf8}
     <button class="btn" id="pauseCar" type="button">Pause vehicle</button>
   </div>
   <div class="chart-card telemetry-table-card">
-    <div class="card-head"><h3>Live demo telemetry</h3><span class="muted">Values update during the route and each simulation</span></div>
+    <div class="card-head"><h3>Live hardware telemetry</h3><span class="muted" id="firebaseConnection">Connecting to Firebase…</span></div>
     <div class="table-card telemetry-scroll"><table class="telemetry-table"><thead><tr><th>Parameter</th><th>Current value</th><th>Reading status</th></tr></thead><tbody>
       <tr><td>Signal quality</td><td id="workSignal">82%</td><td id="signalState">Normal</td></tr>
       <tr><td>Satellites in view</td><td id="workSats">9</td><td id="satState">Tracking</td></tr>
@@ -209,7 +285,7 @@ th{background:#edf6ff;color:#527797}th,td{border-bottom-color:#dcebf8}
   </div>
   <div class="monitor-extra-grid">
     <section class="chart-card signal-history-card">
-      <div class="card-head"><div><h3>GNSS signal quality history</h3><div class="muted">Sample data · last 12 readings</div></div><strong id="historyCurrent">82%</strong></div>
+      <div class="card-head"><div><h3>GNSS signal quality history</h3><div class="muted">Firebase signal history · last 12 readings</div></div><strong id="historyCurrent">82%</strong></div>
       <svg id="signalHistoryChart" class="signal-history-chart" viewBox="0 0 720 250" role="img" aria-label="GNSS signal quality history chart showing the last twelve simulated readings">
         <defs><linearGradient id="signalFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#36c9ee" stop-opacity=".32"/><stop offset="100%" stop-color="#36c9ee" stop-opacity="0"/></linearGradient></defs>
         <g class="chart-grid"><path d="M48 30H700M48 75H700M48 120H700M48 165H700M48 210H700"/></g>
@@ -219,35 +295,169 @@ th{background:#edf6ff;color:#527797}th,td{border-bottom-color:#dcebf8}
         <g id="chartDots"></g><g class="chart-x-labels"><text x="48" y="238">Oldest</text><text x="700" y="238" text-anchor="end">Latest</text></g>
       </svg>
       <div class="legend"><span><i class="dot" style="background:#36c9ee"></i>Signal quality</span><span><i class="dot" style="background:#39d6a0"></i>Reference range</span></div>
-      <div class="muted">Illustrative sample values · demo mode only</div>
+      <div class="muted">Readings received from the ESP32 Firebase database</div>
     </section>
     <section class="status-card component-status-card">
-      <div class="card-head"><div><h3>Component status</h3><div class="muted">Prototype progress</div></div><span class="pill warn">Demo</span></div>
+      <div class="card-head"><div><h3>Component status</h3><div class="muted">Prototype progress</div></div><span class="pill warn">Hardware status not reported</span></div>
       <div class="status-row"><span>ESP32 controller</span><b class="component-good">Working</b></div>
       <div class="status-row"><span>MPU6050 + LCD</span><b class="component-good">Tested</b></div>
-      <div class="status-row"><span>GNSS receiver</span><b class="component-pending">Integration pending</b></div>
-      <div class="status-row"><span>EC200U uplink</span><b class="component-pending">Integration pending</b></div>
-      <div class="status-row"><span>Live dashboard feed</span><b class="component-pending">Not connected</b></div>
+      <div class="status-row"><span>GNSS receiver</span><b class="component-pending">Status not reported</b></div>
+      <div class="status-row"><span>EC200U uplink</span><b class="component-pending">Status not reported</b></div>
+      <div class="status-row"><span>Live dashboard feed</span><b class="component-good">Firebase listener added</b></div>
       <p class="component-footnote">Status labels reflect the project progress currently documented by the team; update them as integration advances.</p>
     </section>
   </div>
   <section class="event-section">
-    <div class="event-title"><div><h2>Event log</h2><div class="muted">Sample events generated by the demonstration controls.</div></div><button class="btn" id="clearLog" type="button">Clear log</button></div>
-    <div class="table-card"><table class="event-table"><thead><tr><th>Time</th><th>Event</th><th>Signal</th><th>Result</th></tr></thead><tbody id="eventRows"><tr><td>19:00:00</td><td>Demo started</td><td>82%</td><td><span class="event-good">Normal</span></td></tr></tbody></table></div>
+    <div class="event-title"><div><h2>Event log</h2><div class="muted">Events received from Firebase.</div></div><button class="btn" id="clearLog" type="button">Clear log</button></div>
+    <div class="table-card"><table class="event-table"><thead><tr><th>Time</th><th>Event</th><th>Signal</th><th>Result</th></tr></thead><tbody id="eventRows"><tr><td colspan="4">Waiting for Firebase events…</td></tr></tbody></table></div>
   </section>
-  <div class="prototype-note"><b>Prototype note:</b> Vehicle movement, telemetry, and alerts are simulated frontend values, not live hardware readings.</div>
+  <div class="prototype-note"><b>Connection note:</b> Dashboard telemetry is read from Firebase path <code>devices/sentinel01/live</code>. The schematic map remains illustrative; it is not a real-time map.</div>
 </div>
 </section>
-</main></div><script>
+</main></div><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getDatabase, ref, onValue, query, limitToLast } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC3s0nonk22rvKT-mGNGpCGHE1KakSULN8",
+  authDomain: "sentinel-bc1f1.firebaseapp.com",
+  databaseURL: "https://sentinel-bc1f1-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "sentinel-bc1f1",
+  storageBucket: "sentinel-bc1f1.firebasestorage.app",
+  messagingSenderId: "1028922757360",
+  appId: "1:1028922757360:web:9fe2796aa7a76a47b97235"
+};
+const firebaseApp = initializeApp(firebaseConfig);
+const database = getDatabase(firebaseApp);
+
+// Static map: marker updates only from valid hardware coordinates in Firebase.
+let sentinelMap = null;
+let sentinelMarker = null;
+let sentinelMapHasFix = false;
+function initSentinelMap() {
+  if (sentinelMap || !window.L) return;
+  sentinelMap = L.map('sentinelLiveMap', { zoomControl: true, scrollWheelZoom: false })
+    .setView([16.5, 80.64], 5);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(sentinelMap);
+}
+function updateSentinelMap(data) {
+  initSentinelMap();
+  const state = document.getElementById('liveMapState');
+  const message = document.getElementById('liveMapMessage');
+  const coords = document.getElementById('liveMapCoords');
+  const lat = Number(data?.lat);
+  const lon = Number(data?.lon);
+  const valid = data && data.lat !== undefined && data.lon !== undefined &&
+    Number.isFinite(lat) && Number.isFinite(lon) &&
+    lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180 &&
+    !(lat === 0 && lon === 0);
+  if (!valid) {
+    state.textContent = sentinelMapHasFix ? 'No current fix · last known position shown' : 'Location unavailable';
+    message.textContent = sentinelMapHasFix
+      ? 'Latest update has no valid coordinates. Marker shows the last known position.'
+      : 'Awaiting valid latitude and longitude from GNSS hardware.';
+    if (!sentinelMapHasFix) coords.textContent = 'LAT — · LON —';
+    return;
+  }
+  const point = [lat, lon];
+  if (!sentinelMarker) {
+    sentinelMarker = L.circleMarker(point, {
+      radius: 8, color: '#e7eff8', weight: 2, fillColor: '#42c4e8', fillOpacity: 1
+    }).addTo(sentinelMap);
+    sentinelMap.setView(point, 17);
+  } else {
+    sentinelMarker.setLatLng(point);
+    sentinelMap.setView(point, sentinelMap.getZoom(), { animate: false });
+  }
+  sentinelMapHasFix = true;
+  state.textContent = 'Coordinates received from hardware';
+  message.textContent = 'Marker shows latest valid GNSS coordinates; no vehicle animation.';
+  coords.textContent = `LAT ${lat.toFixed(6)} · LON ${lon.toFixed(6)}`;
+}
+
+const LIVE_PATH = "devices/sentinel01/live";
+const EVENTS_PATH = "devices/sentinel01/events";
+let liveDataReceived = false;
+let latestLive = null;
 
 const DEMO_OPERATOR_ID='sentinel'; const DEMO_OPERATOR_PASSWORD='sentinel123';
 const loginForm=document.getElementById('loginForm');
-loginForm.addEventListener('submit',e=>{e.preventDefault();const id=document.getElementById('operatorId').value.trim();const pw=document.getElementById('operatorPassword').value; if(id===DEMO_OPERATOR_ID&&pw===DEMO_OPERATOR_PASSWORD){document.getElementById('loginError').textContent='';document.getElementById('loginScreen').classList.add('hidden');document.getElementById('appShell').classList.remove('hidden');sessionStorage.setItem('sentinelDemoLoggedIn','yes');}else{document.getElementById('loginError').textContent='Invalid Operator ID or password. Please try again.';}});
-document.getElementById('logoutBtn').addEventListener('click',()=>{sessionStorage.removeItem('sentinelDemoLoggedIn');document.getElementById('appShell').classList.add('hidden');document.getElementById('loginScreen').classList.remove('hidden');loginForm.reset();});
-if(sessionStorage.getItem('sentinelDemoLoggedIn')==='yes'){document.getElementById('loginScreen').classList.add('hidden');document.getElementById('appShell').classList.remove('hidden');}
-document.getElementById('vehicleForm').addEventListener('submit',e=>{e.preventDefault();const value=document.getElementById('vehicleNumber').value.trim().toUpperCase().replace(/\s+/g,' ');if(!value){document.getElementById('vehicleError').textContent='Enter a vehicle number to continue.';return;}document.getElementById('vehicleError').textContent='';progress=0;lastZone='';carPaused=false;document.getElementById('pauseCar').textContent='Pause vehicle';document.getElementById('selectedVehicle').textContent=value;document.getElementById('carTag').textContent=value;document.getElementById('vehicleWorkspace').classList.remove('hidden');document.getElementById('vehicleGate').classList.add('hidden');document.getElementById('navStatus').textContent='Available · Demo mode';logWork('Vehicle '+value+' loaded. Schematic route active.');refreshTelemetry();});
-
-const views=[...document.querySelectorAll('.view')], nav=[...document.querySelectorAll('[data-view]')];function showView(id){views.forEach(v=>v.classList.toggle('active',v.id===id));nav.forEach(b=>b.classList.toggle('active',b.dataset.view===id));window.scrollTo({top:0,behavior:'smooth'})}nav.forEach(b=>b.addEventListener('click',()=>showView(b.dataset.view)));document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>showView(b.dataset.go)));
+let operatorAuthenticated = sessionStorage.getItem('sentinelDemoLoggedIn') === 'yes';
+const loginScreen=document.getElementById('loginScreen');
+const logoutBtn=document.getElementById('logoutBtn');
+const views=[...document.querySelectorAll('.view')], nav=[...document.querySelectorAll('[data-view]')];
+function showView(id){
+  views.forEach(v=>v.classList.toggle('active',v.id===id));
+  nav.forEach(b=>b.classList.toggle('active',b.dataset.view===id));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function requestMonitoringAccess(){
+  showView('monitoring');
+  if(!operatorAuthenticated){
+    loginScreen.classList.remove('hidden');
+    document.getElementById('appShell').classList.add('login-blurred');
+    document.getElementById('operatorId').focus();
+  } else {
+    loginScreen.classList.add('hidden');
+    document.getElementById('appShell').classList.remove('login-blurred');
+  }
+}
+nav.forEach(b=>b.addEventListener('click',()=>{
+  if(b.dataset.view==='monitoring') requestMonitoringAccess();
+  else showView('overview');
+}));
+loginForm.addEventListener('submit',e=>{
+  e.preventDefault();
+  const id=document.getElementById('operatorId').value.trim();
+  const pw=document.getElementById('operatorPassword').value;
+  if(id===DEMO_OPERATOR_ID&&pw===DEMO_OPERATOR_PASSWORD){
+    document.getElementById('loginError').textContent='';
+    operatorAuthenticated=true;
+    sessionStorage.setItem('sentinelDemoLoggedIn','yes');
+    loginScreen.classList.add('hidden');
+    document.getElementById('appShell').classList.remove('login-blurred');
+    logoutBtn.classList.remove('hidden');
+    document.getElementById('vehicleNumber').focus();
+  } else {
+    document.getElementById('loginError').textContent='Invalid Operator ID or password. Please try again.';
+  }
+});
+logoutBtn.addEventListener('click',()=>{
+  operatorAuthenticated=false;
+  sessionStorage.removeItem('sentinelDemoLoggedIn');
+  loginForm.reset();
+  document.getElementById('vehicleForm').reset();
+  document.getElementById('vehicleWorkspace').classList.add('hidden');
+  document.getElementById('vehicleGate').classList.remove('hidden');
+  logoutBtn.classList.add('hidden');
+  loginScreen.classList.add('hidden');
+  document.getElementById('appShell').classList.remove('login-blurred');
+  showView('overview');
+});
+if(operatorAuthenticated) logoutBtn.classList.remove('hidden');
+document.getElementById('vehicleForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const value=document.getElementById('vehicleNumber').value.trim().toUpperCase();
+  const error=document.getElementById('vehicleError');
+  const allowedVehicleNumber='AXB164712';
+  if(!value){error.textContent='Please enter a vehicle number.';return;}
+  if(value!==allowedVehicleNumber){
+    error.textContent="This vehicle number isn't under our care.";
+    document.getElementById('vehicleWorkspace').classList.add('hidden');
+    return;
+  }
+  error.textContent='';
+  document.getElementById('selectedVehicle').textContent=allowedVehicleNumber;
+  document.getElementById('vehicleWorkspace').classList.remove('hidden');
+  document.getElementById('vehicleGate').classList.add('hidden');
+  document.getElementById('navStatus').textContent='Connecting to Firebase…';
+  logWork('Vehicle '+allowedVehicleNumber+' selected. Live feed uses device sentinel01.');
+  refreshTelemetry();
+});
 let quality=82, threat='normal', manualThreat='normal', samples=[78,81,76,83,80,85,82,79,86,83,80,82], eventHistory=[];
 function time(){return new Date().toLocaleTimeString('en-GB')}
 function logWork(text,cls='good'){
@@ -262,17 +472,107 @@ function drawSignalChart(){
  line.setAttribute('points',pts.map(p=>p[0]+','+p[1]).join(' '));area.setAttribute('d',`M ${pts[0][0]} ${yBottom} `+pts.map(p=>`L ${p[0]} ${p[1]}`).join(' ')+` L ${pts[pts.length-1][0]} ${yBottom} Z`);dots.innerHTML='';pts.forEach((p,i)=>{const c=document.createElementNS('http://www.w3.org/2000/svg','circle');c.setAttribute('cx',p[0]);c.setAttribute('cy',p[1]);c.setAttribute('r',i===pts.length-1?'5':'3');c.setAttribute('fill',p[2]<35?'#ff5268':'#36c9ee');dots.appendChild(c)});document.getElementById('historyCurrent').textContent=vals[vals.length-1]+'%';
 }
 function refreshTelemetry(){
-  if (window.SENTINEL_LIVE_MODE) return;
+  if (!latestLive) return;
+  const d = latestLive;
+  const status = String(d.status ?? "UNKNOWN").toUpperCase();
+  const sats = Number.isFinite(Number(d.sats)) ? Number(d.sats) : null;
+  const speed = Number.isFinite(Number(d.gpsSpeed)) ? Number(d.gpsSpeed) : null;
+  const hdop = Number.isFinite(Number(d.hdop)) ? Number(d.hdop) : null;
+  const accel = Number.isFinite(Number(d.accelMag)) ? Number(d.accelMag) : null;
+  const gyro = Number.isFinite(Number(d.gyroMag)) ? Number(d.gyroMag) : null;
+  // Firmware does not currently send a dedicated signal-quality percentage.
+  // Use Wi-Fi RSSI as a separate connectivity metric, not as GNSS signal strength.
+  const rssi = Number.isFinite(Number(d.rssi)) ? Number(d.rssi) : null;
 
- const jam=threat==='weak', spoof=threat==='mismatch', loss=threat==='loss';let signal,sats,speed,hdop,accel,gyro;
- if(jam){signal=Math.round(5+Math.random()*22);sats=Math.floor(Math.random()*3);speed=randomBetween(0,7);hdop='0';accel=randomBetween(.15,1.35,2);gyro=randomBetween(.02,.42,2)}
- else if(spoof){signal=Math.round(48+Math.random()*35);sats=5+Math.floor(Math.random()*5);speed=randomBetween(35,58);hdop=randomBetween(1.2,3.8,1);accel=randomBetween(1.6,3.2,2);gyro=randomBetween(.45,1.35,2)}
- else if(loss){signal=0;sats=0;speed='—';hdop='—';accel=randomBetween(.2,1.6,2);gyro=randomBetween(.03,.75,2)}
- else{signal=Math.round(76+Math.random()*22);sats=7+Math.floor(Math.random()*5);speed=randomBetween(12,27);hdop=randomBetween(.6,1.4,1);accel=randomBetween(.45,1.35,2);gyro=randomBetween(.03,.22,2)}
- document.getElementById('workSignal').textContent=signal+'%';document.getElementById('workSats').textContent=sats;document.getElementById('workSpeed').textContent=typeof speed==='string'?speed:speed+' km/h';document.getElementById('workHdop').textContent=hdop;document.getElementById('workAccel').textContent=accel+' g';document.getElementById('workGyro').textContent=gyro;
- document.getElementById('signalState').textContent=jam?'Jamming detected':loss?'Unavailable':spoof?'Suspicious':'Normal';document.getElementById('satState').textContent=loss?'No fix':jam?'Reduced tracking':'Tracking';document.getElementById('speedState').textContent=loss?'GNSS unavailable':spoof?'Speed mismatch':'Vehicle moving';document.getElementById('hdopState').textContent=jam?'Jamming demo indicator · 0':loss?'No GNSS fix':'Estimated accuracy';document.getElementById('accelState').textContent=spoof?'Motion mismatch':'IMU reading';document.getElementById('gyroState').textContent='IMU reading';
- samples.push(signal);samples=samples.slice(-12);drawSignalChart();
+  document.getElementById('workSignal').textContent = rssi === null ? '—' : `${rssi} dBm`;
+  document.getElementById('workSats').textContent = sats === null ? '—' : sats;
+  document.getElementById('workSpeed').textContent = speed === null ? '—' : `${speed.toFixed(2)} km/h`;
+  document.getElementById('workHdop').textContent = hdop === null ? '—' : hdop.toFixed(2);
+  document.getElementById('workAccel').textContent = accel === null ? '—' : `${accel.toFixed(3)} m/s²`;
+  document.getElementById('workGyro').textContent = gyro === null ? '—' : `${gyro.toFixed(3)} rad/s`;
+  document.getElementById('signalState').textContent = 'Live Firebase data';
+  document.getElementById('satState').textContent = sats === null ? 'Not reported' : (sats >= 4 ? 'Tracking' : 'Low satellite count');
+  document.getElementById('speedState').textContent = speed === null ? 'Not reported' : 'ESP32 reading';
+  document.getElementById('hdopState').textContent = hdop === null ? 'Not reported' : 'GNSS accuracy estimate';
+  document.getElementById('accelState').textContent = 'ESP32 / MPU6050';
+  document.getElementById('gyroState').textContent = 'ESP32 / MPU6050';
+
+  const statusMap = {
+    'NORMAL': ['Normal · Live', 'pill'],
+    'GNSS_DEGRADED': ['Warning · GNSS degraded', 'pill warn'],
+    'SUSPECTED_SPOOFING': ['Alert · Possible spoofing', 'pill warn'],
+    'GNSS_BLACKOUT': ['Unavailable · GNSS blackout', 'pill warn'],
+    'GPS_ACQUIRING': ['Acquiring GNSS fix', 'pill warn']
+  };
+  const [label, cls] = statusMap[status] || [`${status} · Live`, 'pill warn'];
+  document.getElementById('navStatus').textContent = label;
+  document.getElementById('navStatus').className = cls;
+  document.getElementById('threatText').textContent =
+    `Live ESP32 status: ${status}. Last database update: ${d.ts ? new Date(Number(d.ts)).toLocaleString() : 'timestamp not provided'}.`;
+  document.getElementById('historyCurrent').textContent = rssi === null ? '—' : `${rssi} dBm`;
+  if (rssi !== null) {
+    // This chart represents Wi-Fi RSSI until the firmware sends actual GNSS C/N0/SNR.
+    samples.push(Math.max(0, Math.min(100, rssi + 100)));
+    samples = samples.slice(-12);
+    drawSignalChart();
+  }
+  if (d.lat != null && d.lon != null) {
+    document.getElementById('coords').textContent = `GNSS ${Number(d.lat).toFixed(6)}, ${Number(d.lon).toFixed(6)}`;
+  } else {
+    document.getElementById('coords').textContent = 'GNSS position not available';
+  }
+  document.getElementById('feedNote').textContent = '· Connected to live ESP32 data';
+  document.getElementById('firebaseConnection').textContent = 'Firebase connected · live updates';
+  document.getElementById('firebaseConnection').style.color = '#27845e';
+  document.querySelector('.jamming-lamp').classList.toggle('active', status === 'GNSS_DEGRADED' || status === 'GNSS_BLACKOUT');
+  document.getElementById('jammingLamp').setAttribute('aria-label',
+    status === 'GNSS_DEGRADED' || status === 'GNSS_BLACKOUT' ? 'GNSS warning active' : 'GNSS warning inactive');
 }
+onValue(ref(database, LIVE_PATH), (snapshot) => {
+  if (!snapshot.exists()) {
+    document.getElementById('firebaseConnection').textContent = `No data at ${LIVE_PATH}`;
+    document.getElementById('firebaseConnection').style.color = '#a56a13';
+    document.getElementById('navStatus').textContent = 'No live data';
+    document.getElementById('navStatus').className = 'pill warn';
+    return;
+  }
+  latestLive = snapshot.val();
+  updateSentinelMap(latestLive);
+  liveDataReceived = true;
+  refreshTelemetry();
+  if (!window.__sentinelLiveLogAdded) {
+    window.__sentinelLiveLogAdded = true;
+    logWork('Live ESP32 feed connected', 'good');
+  }
+}, (error) => {
+  console.error('Firebase live listener error:', error);
+  document.getElementById('firebaseConnection').textContent = `Firebase error: ${error.code || error.message}`;
+  document.getElementById('firebaseConnection').style.color = '#c6283d';
+  document.getElementById('navStatus').textContent = 'Firebase read failed';
+  document.getElementById('navStatus').className = 'pill warn';
+});
+onValue(query(ref(database, EVENTS_PATH), limitToLast(30)), (snapshot) => {
+  if (!snapshot.exists()) return;
+  const rows = document.getElementById('eventRows');
+  rows.innerHTML = '';
+  const entries = Object.values(snapshot.val()).sort((a,b) => Number(b.ts || 0) - Number(a.ts || 0));
+  for (const ev of entries) {
+    const tr = document.createElement('tr');
+    const timeCell = document.createElement('td');
+    timeCell.textContent = ev.ts ? new Date(Number(ev.ts)).toLocaleTimeString('en-GB') : '—';
+    const eventCell = document.createElement('td');
+    eventCell.textContent = `${ev.from || '—'} → ${ev.to || '—'}`;
+    const signalCell = document.createElement('td');
+    signalCell.textContent = ev.sats == null ? '—' : `${ev.sats} satellites`;
+    const resultCell = document.createElement('td');
+    resultCell.textContent = ev.to || 'Event';
+    resultCell.className = String(ev.to || '').includes('SPOOF') || String(ev.to || '').includes('BLACKOUT') ? 'event-bad' :
+      String(ev.to || '').includes('DEGRADED') ? 'event-warn' : 'event-good';
+    [timeCell,eventCell,signalCell,resultCell].forEach(td => tr.appendChild(td));
+    rows.appendChild(tr);
+  }
+}, (error) => console.error('Firebase event listener error:', error));
+
 function mode(m,fromRoute=false){
  manualThreat=m;const map=document.querySelector('.map-wrap');const routeAlert=map.classList.contains('caution-cb')||map.classList.contains('caution-ab1');threat=routeAlert?'weak':m;
  map.classList.toggle('jamming',m==='weak'||routeAlert);document.getElementById('jammingLamp').classList.toggle('active',m==='weak'||routeAlert);document.getElementById('jammingLamp').setAttribute('aria-label',m==='weak'||routeAlert?'Jamming alert active':'Jamming alert inactive');
@@ -280,136 +580,15 @@ function mode(m,fromRoute=false){
  const msg={normal:'Integrity check: normal signal restored. GNSS and IMU readings are simulated.',weak:'WARNING: Simulated GNSS jamming. HDOP is shown as 0 for this demo; signal and satellite readings are degraded.',mismatch:'ALERT: Simulated spoofing. GNSS speed and IMU motion differ.',loss:'SIGNAL LOST: Simulated GNSS data unavailable; IMU motion values continue to vary.'};document.getElementById('threatText').textContent=routeAlert?'LOCATION ALERT: Simulated jamming and spoofing warning active at '+(map.classList.contains('caution-cb')?'Central Block (CB)':'AB1')+'. Red lights switch off when the vehicle leaves the zone.':msg[m];document.getElementById('threatPulse').setAttribute('opacity',m==='normal'&&!routeAlert?'0':'.2');document.getElementById('carTag').textContent=m==='weak'?(document.getElementById('selectedVehicle').textContent+' // IMU DR'):document.getElementById('selectedVehicle').textContent;
  document.getElementById('jamBanner').textContent=routeAlert?'⚠ ALERT // JAMMING + SPOOFING // '+(map.classList.contains('caution-cb')?'CENTRAL BLOCK (CB)':'AB1'):'⚠ ALERT // GNSS JAMMING DETECTED';refreshTelemetry();if(!fromRoute)logWork(({normal:'Normal signal restored',weak:'Simulated GNSS jamming',mismatch:'Simulated spoofing detected',loss:'Simulated signal loss'})[m],m==='normal'?'good':m==='weak'?'warn':'bad');
 }
-document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>{const m=b.dataset.mode;if(m==='normal'){progress=0;lastZone='';carPaused=false;document.getElementById('pauseCar').textContent='Pause vehicle';document.querySelector('.map-wrap').classList.remove('caution-cb','caution-ab1','jamming');document.getElementById('jammingLamp').classList.remove('active');}mode(m)}));
+document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>{if(liveDataReceived){document.getElementById('threatText').textContent='Simulation controls are disabled for live mode. The displayed status comes from the ESP32 Firebase feed.';return;}const m=b.dataset.mode;if(m==='normal'){progress=0;lastZone='';carPaused=false;document.getElementById('pauseCar').textContent='Pause vehicle';document.querySelector('.map-wrap').classList.remove('caution-cb','caution-ab1','jamming');document.getElementById('jammingLamp').classList.remove('active');}mode(m)}));
 document.getElementById('clearLog').addEventListener('click',()=>{document.getElementById('eventRows').innerHTML='';logWork('Event log cleared','good')});
 let carPaused=false,progress=0,carTimer=null,lastZone='';const car=document.getElementById('movingCar'),tag=document.getElementById('carTag');const routePoints=[[450,430],[450,382],[390,365],[315,350],[245,350],[245,315],[270,285],[306,252],[306,224],[306,195],[340,195],[375,195],[450,195],[525,195],[560,195],[594,195],[594,224],[594,252],[570,292],[655,340],[570,292],[475,348],[450,382],[450,430]];
 function point(t){let segs=routePoints.slice(0,-1).map((a,i)=>({a,b:routePoints[i+1]})),lengths=segs.map(s=>Math.hypot(s.b[0]-s.a[0],s.b[1]-s.a[1])),total=lengths.reduce((a,b)=>a+b,0),d=(t%1)*total;for(let i=0;i<segs.length;i++){if(d<=lengths[i]){let s=segs[i],f=d/lengths[i];return [s.a[0]+(s.b[0]-s.a[0])*f,s.a[1]+(s.b[1]-s.a[1])*f]}d-=lengths[i]}return routePoints[0]}
-function move() {
-    // LIVE MODE: keep the schematic vehicle marker parked at AB2.
-    // Do not overwrite coordinates or status supplied by Firebase.
-    if (window.SENTINEL_LIVE_MODE) {
-        car.setAttribute("transform", "translate(655 385)");
-        tag.setAttribute("x", 655);
-        tag.setAttribute("y", 361);
-        return; // Stop the simulated animation loop in live mode.
-    }
-
-    // DEMO MODE: follow the simulated campus route.
-    if (
-        !carPaused &&
-        !document.getElementById("vehicleWorkspace").classList.contains("hidden")
-    ) {
-        progress = (progress + 0.00105) % 1;
-        const [x, y] = point(progress);
-
-        car.setAttribute("transform", `translate(${x} ${y})`);
-        tag.setAttribute("x", x);
-        tag.setAttribute("y", y - 24);
-
-        document.getElementById("coords").textContent =
-            `GNSS ${(16.49765 + progress * 0.0008).toFixed(5)}, ${(80.50024 + progress * 0.0007).toFixed(5)}`;
-
-        const zone =
-            (x > 380 && x < 520 && y > 175 && y < 230) ? "CB" :
-            (x > 190 && x < 300 && y > 310 && y < 380) ? "AB1" :
-            (x > 600 && x < 710 && y > 310 && y < 380) ? "AB2" : "";
-
-        const map = document.querySelector(".map-wrap");
-        const zoneAlert = zone === "CB" || zone === "AB1";
-
-        map.classList.toggle("caution-cb", zone === "CB");
-        map.classList.toggle("caution-ab1", zone === "AB1");
-
-        if (zoneAlert) {
-            threat = "weak";
-            map.classList.add("jamming");
-            document.getElementById("jammingLamp").classList.add("active");
-
-            document.getElementById("jamBanner").textContent =
-                "⚠ ALERT // JAMMING + SPOOFING // " +
-                (zone === "CB" ? "CENTRAL BLOCK (CB)" : "AB1");
-
-            document.getElementById("navStatus").textContent =
-                "Warning · " + (zone === "CB" ? "Central Block (CB)" : "AB1");
-            document.getElementById("navStatus").className = "pill warn";
-
-            document.getElementById("threatText").textContent =
-                "LOCATION ALERT: Simulated jamming and spoofing warning active at " +
-                (zone === "CB" ? "Central Block (CB)" : "AB1") +
-                ". Red lights switch off when the vehicle leaves the zone.";
-        } else {
-            threat = manualThreat;
-            map.classList.toggle("jamming", manualThreat === "weak");
-            document.getElementById("jammingLamp").classList.toggle(
-                "active",
-                manualThreat === "weak"
-            );
-
-            if (manualThreat !== "weak") {
-                document.getElementById("navStatus").textContent =
-                    manualThreat === "mismatch" ? "Alert · Possible spoofing" :
-                    manualThreat === "loss" ? "Unavailable · Signal lost" :
-                    "Available · Demo mode";
-
-                document.getElementById("navStatus").className =
-                    "pill" + (manualThreat === "normal" ? "" : " warn");
-            }
-        }
-
-        if (zone && zone !== lastZone) {
-            const notice = document.getElementById("cautionNotice");
-            notice.textContent =
-                "⚠ LOCATION ALERT: " +
-                (zone === "CB" ? "CENTRAL BLOCK (CB)" : zone === "AB1" ? "AB1" : "AB2") +
-                (zoneAlert ? " · JAMMING + SPOOFING" : " · CAUTION");
-            notice.classList.remove("hidden");
-
-            logWork(
-                zoneAlert
-                    ? "Jamming + spoofing alert at " +
-                        (zone === "CB" ? "Central Block (CB)" : "AB1")
-                    : "Vehicle reached AB2",
-                "warn"
-            );
-
-            setTimeout(() => notice.classList.add("hidden"), 4500);
-        }
-
-        lastZone = zone || "";
-
-        document.getElementById("sig1").setAttribute(
-            "opacity",
-            threat === "loss" || zoneAlert ? ".18" : ".8"
-        );
-        document.getElementById("sig2").setAttribute(
-            "opacity",
-            threat === "loss" || zoneAlert ? ".2" : ".8"
-        );
-    }
-
-    carTimer = requestAnimationFrame(move);
-}
-
-move();
-
-document.getElementById("pauseCar").onclick = () => {
-    carPaused = !carPaused;
-    document.getElementById("pauseCar").textContent =
-        carPaused ? "Resume vehicle" : "Pause vehicle";
-    logWork(carPaused ? "Vehicle animation paused" : "Vehicle animation resumed");
-};
-
-// Never let demo telemetry overwrite live Firebase readings.
-setInterval(() => {
-    if (
-        !window.SENTINEL_LIVE_MODE &&
-        !document.getElementById("vehicleWorkspace").classList.contains("hidden")
-    ) {
-        refreshTelemetry();
-    }
-}, 1400);
-
-drawSignalChart();
+function move(){if(!liveDataReceived&&!carPaused&&!document.getElementById('vehicleWorkspace').classList.contains('hidden')){progress=(progress+.00105)%1;let [x,y]=point(progress);car.setAttribute('transform',`translate(${x} ${y})`);tag.setAttribute('x',x);tag.setAttribute('y',y-24);document.getElementById('coords').textContent=`GNSS ${(16.49765+progress*.0008).toFixed(5)}, ${(80.50024+progress*.0007).toFixed(5)}`;
+ let zone=(x>380&&x<520&&y>175&&y<230)?'CB':(x>190&&x<300&&y>310&&y<380)?'AB1':(x>600&&x<710&&y>310&&y<380)?'AB2':'';const map=document.querySelector('.map-wrap'),zoneAlert=zone==='CB'||zone==='AB1';map.classList.toggle('caution-cb',zone==='CB');map.classList.toggle('caution-ab1',zone==='AB1');
+ if(zoneAlert){threat='weak';map.classList.add('jamming');document.getElementById('jammingLamp').classList.add('active');document.getElementById('jamBanner').textContent='⚠ ALERT // JAMMING + SPOOFING // '+(zone==='CB'?'CENTRAL BLOCK (CB)':'AB1');if(threat==='normal')threat='weak';document.getElementById('navStatus').textContent='Warning · '+(zone==='CB'?'Central Block (CB)':'AB1');document.getElementById('navStatus').className='pill warn';document.getElementById('threatText').textContent='LOCATION ALERT: Simulated jamming and spoofing warning active at '+(zone==='CB'?'Central Block (CB)':'AB1')+'. Red lights switch off when the vehicle leaves the zone.';}
+ else{threat=manualThreat;map.classList.toggle('jamming',manualThreat==='weak');document.getElementById('jammingLamp').classList.toggle('active',manualThreat==='weak');if(manualThreat!=='weak'){document.getElementById('navStatus').textContent=manualThreat==='mismatch'?'Alert · Possible spoofing':manualThreat==='loss'?'Unavailable · Signal lost':'Available · Demo mode';document.getElementById('navStatus').className='pill'+(manualThreat==='normal'?'':' warn');}}
+ if(zone&&zone!==lastZone){const notice=document.getElementById('cautionNotice');notice.textContent='⚠ LOCATION ALERT: '+(zone==='CB'?'CENTRAL BLOCK (CB)':zone==='AB1'?'AB1':'AB2')+(zoneAlert?' · JAMMING + SPOOFING':' · CAUTION');notice.classList.remove('hidden');logWork(zoneAlert?'Jamming + spoofing alert at '+(zone==='CB'?'Central Block (CB)':'AB1'):'Vehicle reached AB2','warn');setTimeout(()=>notice.classList.add('hidden'),4500)}if(zone)lastZone=zone;else lastZone='';document.getElementById('sig1').setAttribute('opacity',threat==='loss'||zoneAlert?'.18':'.8');document.getElementById('sig2').setAttribute('opacity',threat==='loss'||zoneAlert?'.2':'.8');
+ }carTimer=requestAnimationFrame(move)}move();document.getElementById('pauseCar').onclick=()=>{carPaused=!carPaused;document.getElementById('pauseCar').textContent=carPaused?'Resume vehicle':'Pause vehicle';logWork(carPaused?'Vehicle animation paused':'Vehicle animation resumed')};drawSignalChart();
 </script>
- <script type="module" src="./firebase-live.js"></script>
 </body></html>
